@@ -1,4 +1,6 @@
-﻿using DesignPatternsASP.Configuration;
+﻿using DesignPatterns.Models.Data;
+using DesignPatterns.Repository;
+using DesignPatternsASP.Configuration;
 using DesignPatternsASP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,15 +12,21 @@ namespace DesignPatternsASP.Controllers
     public class HomeController : Controller
     {
         private readonly IOptions<MyConfig> _config;
-        public HomeController(IOptions<MyConfig> config)
+
+        private readonly IRepository<Beer> _repository;
+        public HomeController(IOptions<MyConfig> config, IRepository<Beer> repository)
         {
             _config = config;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
             Log.GetInstance(_config.Value.PathLog).Save("Ingreso a Index");
-            return View();
+
+            IEnumerable<Beer> list = _repository.Get();
+
+            return View("Index", list);
         }
 
         public IActionResult Privacy()

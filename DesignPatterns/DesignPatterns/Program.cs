@@ -6,17 +6,34 @@ using DesignPatterns.Singleton;
 
 using (var context = new DesignPatternsContext())
 {
-    BeerRepository beerRepository = new BeerRepository(context);
-    var beer = new Beer();
-    beer.Name = "Jever";
-    beer.Style = "Strong";
+    // BeerRepository beerRepository = new BeerRepository(context);
+
+    var beerRepository = new Repository<Beer>(context);
+
+    var beer = new Beer()
+    {
+        Name = "Palermo",
+        Style = "Premium"
+    };
 
     beerRepository.Add(beer);
     beerRepository.Save();
 
     foreach (var b in beerRepository.Get())
     {
-        Console.WriteLine(b.Name + " - " + b.Style);
+        Console.WriteLine($"{b.Name} - {b.Style}");
+    }
+
+    var brandRepository = new Repository<Brand>(context);
+    Brand brand = new Brand();
+    brand.Name = "Corona";
+    
+    brandRepository.Add(brand);
+    brandRepository.Save();
+
+    foreach (var b in brandRepository.Get())
+    {
+        Console.WriteLine($"{b.Name}");
     }
     Console.ReadLine();
 

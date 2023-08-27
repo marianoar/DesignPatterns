@@ -1,4 +1,7 @@
+using DesignPatterns.Models.Data;
+using DesignPatterns.Repository;
 using DesignPatternsASP.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Tools.Earn;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,13 @@ builder.Services.AddTransient((factory) =>
         builder.Configuration.GetSection("MyConfig").GetValue<decimal>("ForeignPercentage"),
         builder.Configuration.GetSection("MyConfig").GetValue<decimal>("Extra"));
 });
+
+builder.Services.AddDbContext<DesignPatternsContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
+});
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
