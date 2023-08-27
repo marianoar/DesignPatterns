@@ -1,30 +1,66 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DesignPatterns.FactoryPattern;
+using DesignPatterns.Models;
+using DesignPatterns.RepositoryPattern;
 using DesignPatterns.Singleton;
 
-Console.WriteLine("Hello, World!");
+using (var context = new DesignPatternsContext())
+{
+    BeerRepository beerRepository = new BeerRepository(context);
+    var beer = new Beer();
+    beer.Name = "Jever";
+    beer.Style = "Strong";
 
-var singleton = Singleton.Instance;
+    beerRepository.Add(beer);
+    beerRepository.Save();
 
-var log = Log.Instance;
+    foreach (var b in beerRepository.Get())
+    {
+        Console.WriteLine(b.Name + " - " + b.Style);
+    }
+    Console.ReadLine();
 
-log.Save("Prueba");
+}
 
-var a = Singleton.Instance;
-var b = Singleton.Instance;
+#region EntityFramework example
+//using (var context = new DesignPatternsContext())
+//{
+//    var list = context.Beers.ToList();
 
-//verifico si es el mismo objeto
-Console.WriteLine(a == b);
+//    foreach( var beer in list)
+//    {
+//        Console.WriteLine(beer.Name + " - " + beer.Style);
+//    }
+//    Console.ReadLine();
+//}
+#endregion
 
-Console.WriteLine(" ---- Factory Patterns ---- ");
+#region Primera parte
 
-// no puedo crear un objeto de la clase abstracta, pero si de sus hijos
-SaleFactory storeSaleFactory = new StoreSaleFactory(10);
+//Console.WriteLine("Hello, World!");
 
-SaleFactory internetSaleFactory = new InternetSaleFactory(5);
+//var singleton = Singleton.Instance;
 
-ISale saleA = storeSaleFactory.GetSale();
-saleA.Sell(100);
+//var log = Log.Instance;
 
-ISale saleB = internetSaleFactory.GetSale();
-saleB.Sell(100);
+//log.Save("Prueba");
+
+//var a = Singleton.Instance;
+//var b = Singleton.Instance;
+
+////verifico si es el mismo objeto
+//Console.WriteLine(a == b);
+
+//Console.WriteLine(" ---- Factory Patterns ---- ");
+
+//// no puedo crear un objeto de la clase abstracta, pero si de sus hijos
+//SaleFactory storeSaleFactory = new StoreSaleFactory(10);
+
+//SaleFactory internetSaleFactory = new InternetSaleFactory(5);
+
+//ISale saleA = storeSaleFactory.GetSale();
+//saleA.Sell(100);
+
+//ISale saleB = internetSaleFactory.GetSale();
+//saleB.Sell(100);
+#endregion
