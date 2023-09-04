@@ -1,6 +1,7 @@
 ﻿using DesignPatterns.Models.Data;
 using DesignPatterns.Repository;
 using DesignPatternsASP.Models.ViewModels;
+using DesignPatternsASP.Strategies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -29,8 +30,7 @@ namespace DesignPatternsASP.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            var brands = _unitOfWork.Beers.Get();
-            ViewBag.Brands = new SelectList(brands,"BrandId", "Name");
+            GetBrandsData();
             return View();
         }
         [HttpPost]
@@ -38,32 +38,26 @@ namespace DesignPatternsASP.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var brands = _unitOfWork.Beers.Get();
-                ViewBag.Brands = new SelectList(brands, "BrandId", "Name");
+                GetBrandsData();
+
                 return View("Add", beerVM);
             }
 
-            var beer = new Beer();
-            beer.Name = beerVM.Name;
-            beer.Style = beerVM.Style;
+            var context = beerVM.BrandId == null ? 
+                                        new BeerContext(new BeerWidthBrandStrategy()):
+                                        new BeerContext(new BeerStrategy());
 
-            if(beerVM.BrandId == null)
-            {
-                var brand = new Brand();
-                brand.Name = beerVM.OtherBrand;
-                brand.BrandId = Guid.NewGuid();
-                beer.BrandId = brand.BrandId;
-
-                _unitOfWork.Brands.Add(brand);
-            }
-            else
-            {
-                beer.BrandId = (Guid)beerVM.BrandId;
-            }
-            _unitOfWork.Beers.Add(beer);
-            _unitOfWork.Save(); //estamos grabando las dos tablas simultanemente con una sola conexion
+            context.Add(beerVM, _unitOfWork);
 
             return RedirectToAction("Index");
         }
+        #region Helpers
+        private void GetBrandsData()
+        {
+            var brands = _unitOfWork.Beers.Get();
+            ViewBag.Brands = new SelectList(brands, "BrandId", "Name");
+        }
+
+        #endregion
     }
 }

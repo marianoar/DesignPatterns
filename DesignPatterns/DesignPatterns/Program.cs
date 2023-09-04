@@ -3,29 +3,45 @@ using DesignPatterns.FactoryPattern;
 using DesignPatterns.Models;
 using DesignPatterns.RepositoryPattern;
 using DesignPatterns.Singleton;
+using DesignPatterns.StrategyPattern;
 using DesignPatterns.UnitOfWorkPattern;
 
-using (var context = new DesignPatternsContext())
-{
-    var unitOfWork = new UnitOfWork(context);
+var context = new Context(new CarStrategy());
+context.Run();
 
-    var beers = unitOfWork.Beers;
+context.Strategy = new BikeStrategy();
+context.Run();
 
-    var beer = new Beer();
-    beer.Name = "Norte";
-    beer.Style = "Porter";
+context.Strategy = new BicycleStrategy();
+context.Run();
 
-    beers.Add(beer);
+Console.ReadKey();
 
-    var brands = unitOfWork.Brands;
-    var brand = new Brand();
-    brand.Name = "Salta";
+# region UnitOfWork
 
-    brands.Add(brand);
+//using (var context = new DesignPatternsContext())
+//{
+//    var unitOfWork = new UnitOfWork(context);
 
-    unitOfWork.Save();
+//    var beers = unitOfWork.Beers;
 
-}
+//    var beer = new Beer();
+//    beer.Name = "Norte";
+//    beer.Style = "Porter";
+
+//    beers.Add(beer);
+
+//    var brands = unitOfWork.Brands;
+//    var brand = new Brand();
+//    brand.Name = "Salta";
+
+//    brands.Add(brand);
+
+//    unitOfWork.Save();
+
+//}
+
+#endregion
 #region Repository Pattern
 //using (var context = new DesignPatternsContext())
 //{
