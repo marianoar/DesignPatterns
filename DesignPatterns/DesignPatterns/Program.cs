@@ -3,41 +3,64 @@ using DesignPatterns.FactoryPattern;
 using DesignPatterns.Models;
 using DesignPatterns.RepositoryPattern;
 using DesignPatterns.Singleton;
+using DesignPatterns.UnitOfWorkPattern;
 
 using (var context = new DesignPatternsContext())
 {
-    // BeerRepository beerRepository = new BeerRepository(context);
+    var unitOfWork = new UnitOfWork(context);
 
-    var beerRepository = new Repository<Beer>(context);
+    var beers = unitOfWork.Beers;
 
-    var beer = new Beer()
-    {
-        Name = "Palermo",
-        Style = "Premium"
-    };
+    var beer = new Beer();
+    beer.Name = "Norte";
+    beer.Style = "Porter";
 
-    beerRepository.Add(beer);
-    beerRepository.Save();
+    beers.Add(beer);
 
-    foreach (var b in beerRepository.Get())
-    {
-        Console.WriteLine($"{b.Name} - {b.Style}");
-    }
+    var brands = unitOfWork.Brands;
+    var brand = new Brand();
+    brand.Name = "Salta";
 
-    var brandRepository = new Repository<Brand>(context);
-    Brand brand = new Brand();
-    brand.Name = "Corona";
-    
-    brandRepository.Add(brand);
-    brandRepository.Save();
+    brands.Add(brand);
 
-    foreach (var b in brandRepository.Get())
-    {
-        Console.WriteLine($"{b.Name}");
-    }
-    Console.ReadLine();
+    unitOfWork.Save();
 
 }
+#region Repository Pattern
+//using (var context = new DesignPatternsContext())
+//{
+
+
+//    var beerRepository = new Repository<Beer>(context);
+
+//    var beer = new Beer()
+//    {
+//        Name = "Palermo",
+//        Style = "Premium"
+//    };
+
+//    beerRepository.Add(beer);
+//    beerRepository.Save();
+
+//    foreach (var b in beerRepository.Get())
+//    {
+//        Console.WriteLine($"{b.Name} - {b.Style}");
+//    }
+
+//    var brandRepository = new Repository<Brand>(context);
+//    Brand brand = new Brand();
+//    brand.Name = "Corona";
+
+//    brandRepository.Add(brand);
+//    brandRepository.Save();
+
+//    foreach (var b in brandRepository.Get())
+//    {
+//        Console.WriteLine($"{b.Name}");
+//    }
+//    Console.ReadLine();
+//}
+#endregion
 
 #region EntityFramework example
 //using (var context = new DesignPatternsContext())
