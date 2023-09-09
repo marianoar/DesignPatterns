@@ -3,6 +3,7 @@ using DesignPatterns.Repository;
 using DesignPatternsASP.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Tools.Earn;
+using Tools.Generator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddDbContext<DesignPatternsContext>(options =>
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<GeneratorConcreteBuilder>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

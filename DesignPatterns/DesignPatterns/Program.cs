@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using DesignPatterns.BuilderPattern;
 using DesignPatterns.FactoryPattern;
 using DesignPatterns.Models;
 using DesignPatterns.RepositoryPattern;
@@ -6,16 +7,46 @@ using DesignPatterns.Singleton;
 using DesignPatterns.StrategyPattern;
 using DesignPatterns.UnitOfWorkPattern;
 
-var context = new Context(new CarStrategy());
-context.Run();
 
-context.Strategy = new BikeStrategy();
-context.Run();
+var builder = new PreparedAlcoholicDrinkConcreteBuilder();
 
-context.Strategy = new BicycleStrategy();
-context.Run();
+builder.AddIngredients("Tequila");
+builder.SetAlcohol(1);
+builder.Mix();
+builder.Rest(500);
 
+var preparedDrink = builder.GetPreparedDrink();
+
+Console.WriteLine(preparedDrink.Result);
 Console.ReadKey();
+
+// Ahora con el agregado del Director
+
+Director director = new Director(builder);
+
+director.PrepararMargerita();
+preparedDrink = builder.GetPreparedDrink();
+Console.WriteLine(preparedDrink.Result);
+
+director.PrepararPiñaColada();
+preparedDrink = builder.GetPreparedDrink();
+Console.WriteLine(preparedDrink.Result);
+Console.ReadKey();
+
+
+#region Strategy
+//var context = new Context(new CarStrategy());
+//context.Run();
+
+//context.Strategy = new BikeStrategy();
+//context.Run();
+
+//context.Strategy = new BicycleStrategy();
+//context.Run();
+
+//Console.ReadKey();
+
+#endregion
 
 # region UnitOfWork
 
