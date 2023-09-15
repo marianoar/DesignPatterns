@@ -4,36 +4,57 @@ using DesignPatterns.FactoryPattern;
 using DesignPatterns.Models;
 using DesignPatterns.RepositoryPattern;
 using DesignPatterns.Singleton;
+using DesignPatterns.StatePattern;
 using DesignPatterns.StrategyPattern;
 using DesignPatterns.UnitOfWorkPattern;
 
+CustomerContext customerContext = new CustomerContext();
 
-var builder = new PreparedAlcoholicDrinkConcreteBuilder();
+Console.WriteLine(customerContext.GetState());
 
-builder.AddIngredients("Tequila");
-builder.SetAlcohol(1);
-builder.Mix();
-builder.Rest(500);
+customerContext.Request(100);
 
-var preparedDrink = builder.GetPreparedDrink();
+Console.WriteLine(customerContext.GetState());
 
-Console.WriteLine(preparedDrink.Result);
-Console.ReadKey();
+customerContext.Request(60);
 
-// Ahora con el agregado del Director
+Console.WriteLine(customerContext.GetState());
 
-Director director = new Director(builder);
+customerContext.Request(55);
 
-director.PrepararMargerita();
-preparedDrink = builder.GetPreparedDrink();
-Console.WriteLine(preparedDrink.Result);
+Console.WriteLine(customerContext.GetState());
 
-director.PrepararPiñaColada();
-preparedDrink = builder.GetPreparedDrink();
-Console.WriteLine(preparedDrink.Result);
 Console.ReadKey();
 
 
+
+#region Builder
+//var builder = new PreparedAlcoholicDrinkConcreteBuilder();
+
+//builder.AddIngredients("Tequila");
+//builder.SetAlcohol(1);
+//builder.Mix();
+//builder.Rest(500);
+
+//var preparedDrink = builder.GetPreparedDrink();
+
+//Console.WriteLine(preparedDrink.Result);
+//Console.ReadKey();
+
+//// Ahora con el agregado del Director
+
+//Director director = new Director(builder);
+
+//director.PrepararMargerita();
+//preparedDrink = builder.GetPreparedDrink();
+//Console.WriteLine(preparedDrink.Result);
+
+//director.PrepararPiñaColada();
+//preparedDrink = builder.GetPreparedDrink();
+//Console.WriteLine(preparedDrink.Result);
+//Console.ReadKey();
+
+#endregion
 #region Strategy
 //var context = new Context(new CarStrategy());
 //context.Run();
